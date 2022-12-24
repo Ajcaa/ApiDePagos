@@ -11,9 +11,6 @@ class ServicesViewSet(viewsets.ModelViewSet):
 
     queryset = Services.objects.all()
     pagination_class = StandardResultsSetPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    
-    search_fields = ['Name']
     throttle_scope = 'others'
 
     def get_permissions(self):
@@ -86,8 +83,7 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
 
     queryset = Payment_user.objects.all()
     pagination_class = StandardResultsSetPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    
+    filter_backends = [filters.SearchFilter]
     search_fields = ['PaymentDate', 'ExpirationDate']
     throttle_scope = 'pagos'
 
@@ -126,10 +122,10 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
             if isinstance(request.data, list):
                 lista = []
                 for i in range(len(request.data)):
-                    if request.data[i]["expiration_date"] < serializer.data[i]["payment_date"]:
+                    if request.data[i]["ExpirationDate"] < serializer.data[i]["PaymentDate"]:
                         lista.append({
-                            "pay_user_id": serializer.data[i]["id"],
-                            "penalty_fee_amount": 20.00
+                            "Payment_user_id": serializer.data[i]["Id"],
+                            "Penalty_fee_amount": 20.00
                             })
                 print(lista)
                 expired_serial=ExpiredPaymentsSerializer(data=lista, many=True)
@@ -137,10 +133,10 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
                 if expired_serial.is_valid():
                     ExpiredPaymentsViewSet.create(ExpiredPaymentsViewSet,request=expired_serial)
             else:
-                if request.data["expiration_date"] < serializer.data["payment_date"]:
+                if request.data["ExpirationDate"] < serializer.data["PaymentDate"]:
                     expired_serial=ExpiredPaymentsSerializer(data={
-                        "pay_user_id": serializer.data["id"],
-                        "penalty_fee_amount": 20.00
+                        "Payment_user_id": serializer.data["Id"],
+                        "Penalty_fee_amount": 20.00
                         })
                         
                     if expired_serial.is_valid():
@@ -158,10 +154,10 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            if request.data["expiration_date"] < serializer.data["payment_date"]:
-                expired_serial=ExpiredPaymentsSerializer(data={
-                    "pay_user_id": serializer.data["id"],
-                    "penalty_fee_amount": 20.00
+            if request.data["ExpirationDate"] < serializer.data["PaymentDate"]:
+                expired_serial=ExpiredPaymentsSerializer(data={                   
+                    "Payment_user_id ": serializer.data["id"],
+                    "Penalty_fee_amount": 20.00
                     })
                     
                 if expired_serial.is_valid():
@@ -178,10 +174,10 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            if request.data["expiration_date"] < serializer.data["payment_date"]:
+            if request.data["ExpirationDate"] < serializer.data["PaymentDate"]:
                 expired_serial=ExpiredPaymentsSerializer(data={
-                    "pay_user_id": serializer.data["id"],
-                    "penalty_fee_amount": 20.00
+                    "Payment_user_id": serializer.data["Id"],
+                    "Penalty_fee_amount": 20.00
                     })
                     
                 if expired_serial.is_valid():
@@ -204,9 +200,6 @@ class ExpiredPaymentsViewSet(viewsets.ModelViewSet):
 
     queryset = Expired_payments.objects.all()
     pagination_class = StandardResultsSetPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    
-    search_fields = ['pay_user_id__user_id__username','Penalty_fee_amount']
     throttle_scope = 'others'
 
     def get_permissions(self):
