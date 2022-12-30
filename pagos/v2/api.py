@@ -90,10 +90,10 @@ class PaymentUserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         permission_classes = []
 
-        if self.action == 'create' or self.action == 'list':
+        if self.action == 'create' or self.action == 'list'  or self.action == 'retrieve':
             permission_classes = [permissions.IsAuthenticated]
 
-        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy' or self.action == 'retrieve':
+        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
             permission_classes = [permissions.IsAdminUser]
 
         return [permission() for permission in permission_classes]

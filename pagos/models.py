@@ -30,6 +30,9 @@ class Services(models.Model):
     Description = models.CharField(max_length=200)
     Logo = models.URLField()
 
+    def __str__(self):
+        return self.Name
+
 
 class Payment_user(models.Model):
     Id = models.AutoField(primary_key=True)
@@ -39,6 +42,8 @@ class Payment_user(models.Model):
     PaymentDate = models.DateField(auto_now_add=True)
     ExpirationDate = models.DateField()
 
+    def __str__(self):
+        return str(self.Service_id)
 
 
 class Expired_payments(models.Model):
